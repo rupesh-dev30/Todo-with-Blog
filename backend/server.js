@@ -1,9 +1,10 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-var cookieParser = require('cookie-parser')
-
-require("dotenv").config();
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import authRouter from "./routes/auth/authRoutes.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 mongoose
   .connect(process.env.MONGO_URI)

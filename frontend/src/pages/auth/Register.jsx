@@ -1,6 +1,8 @@
 import CommonForm from "@/components/CommonForm";
 import { registerFormControls } from "@/data";
+import { registerUser } from "@/slice/authSlice";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 
 const initialState = {
@@ -10,9 +12,14 @@ const initialState = {
 
 export default function Register() {
   const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
 
   function onSubmit(e) {
     e.preventDefault();
+
+    dispatch(registerUser(formData)).then((data) => {
+      console.log(data);
+    });
   }
 
   return (
