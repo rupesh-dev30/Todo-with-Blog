@@ -108,7 +108,7 @@ export default function CommonForm({
           </div>
         ))}
       </div>
-      <Button disabled={isBtnDisabled} type="submit" className="mt-5 w-full">
+      <Button disabled={isBtnDisabled} type="submit" className="mt-8 w-full">
         {buttonText || "Submit"}
       </Button>
     </form>

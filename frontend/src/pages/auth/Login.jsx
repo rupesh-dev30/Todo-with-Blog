@@ -16,7 +16,7 @@ export default function Login() {
   }
 
   return (
-    <div className="bg-white w-[450px] h-auto px-10 py-8 rounded-md ">
+    <div className="bg-white w-[450px] h-auto px-10 py-10 rounded-lg">
       <div className="text-center">
         <h1 className="font-bold text-3xl">Sign in to your account</h1>
         <div className="flex items-center justify-center gap-1 mt-2">
