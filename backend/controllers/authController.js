@@ -73,7 +73,7 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
   const { userName, email, password, name } = req.body;
 
-  if (!userName || !email || !password) {
+  if (!userName || !email || !password || !name) {
     return res.status(400).json({
       success: false,
       message: "Missing required fields",
@@ -98,7 +98,7 @@ const registerUser = async (req, res) => {
 
     const newUser = new User({
       userName,
-      fullName: name,
+      name,
       email,
       password: hashedPassword,
     });
