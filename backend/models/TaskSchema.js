@@ -9,10 +9,12 @@ const TaskSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: true,
+      required: [true, "Title is required"],
+      trim: true, // Removes any extra whitespace
     },
     description: {
       type: String,
+      trim: true, // Ensures no leading/trailing spaces
     },
     status: {
       type: String,
@@ -29,9 +31,17 @@ const TaskSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
+      default: Date.now, // Auto-generates current date if not provided
     },
     category: {
-      type: String,
+      type: [String], // Allows multiple categories for a task
+      default: [], // Defaults to an empty array if not set
+      validate: {
+        validator: function (value) {
+          return Array.isArray(value) && value.every((item) => typeof item === 'string');
+        },
+        message: "Each category must be a string",
+      },
     },
   },
   { timestamps: true }

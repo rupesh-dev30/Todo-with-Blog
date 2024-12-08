@@ -7,6 +7,8 @@ import Authentication from "./components/Authentication";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { verifyAuth } from "./slice/authSlice";
+import Todo from "./components/Todo";
+import Blog from "./components/Blog";
 
 export default function App() {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -23,6 +25,22 @@ export default function App() {
         element={
           <Authentication isAuthenticated={isAuthenticated}>
             <Home />
+          </Authentication>
+        }
+      />
+      <Route
+        path="/todo"
+        element={
+          <Authentication isAuthenticated={isAuthenticated}>
+            <Todo />
+          </Authentication>
+        }
+      />
+      <Route
+        path="/blog"
+        element={
+          <Authentication isAuthenticated={isAuthenticated}>
+            <Blog />
           </Authentication>
         }
       />

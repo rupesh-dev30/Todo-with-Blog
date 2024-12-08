@@ -37,6 +37,7 @@ const loginUser = async (req, res) => {
       {
         id: existingUser._id,
         email: existingUser.email,
+        name: existingUser.fullName
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
@@ -56,9 +57,9 @@ const loginUser = async (req, res) => {
         success: true,
         message: "Logged in successfully",
         user: {
+          name: existingUser.fullName,
           id: existingUser._id,
           email: existingUser.email,
-          name: existingUser.name,
         },
       });
   } catch (error) {
@@ -98,7 +99,7 @@ const registerUser = async (req, res) => {
 
     const newUser = new User({
       userName,
-      name,
+      fullName: name,
       email,
       password: hashedPassword,
     });
