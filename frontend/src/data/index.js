@@ -17,6 +17,13 @@ export const loginFormControls = [
 
 export const registerFormControls = [
   {
+    name: 'name',
+    label: 'Name',
+    placeholder: "Enter your name",
+    componentType: 'input',
+    text: "text",
+  },
+  {
     name: "userName",
     label: "User Name",
     placeholder: "Enter your user name",

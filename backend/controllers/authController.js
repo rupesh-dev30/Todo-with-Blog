@@ -58,6 +58,7 @@ const loginUser = async (req, res) => {
         user: {
           id: existingUser._id,
           email: existingUser.email,
+          name: existingUser.name,
         },
       });
   } catch (error) {
@@ -70,7 +71,7 @@ const loginUser = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
+  const { userName, email, password, name } = req.body;
 
   if (!userName || !email || !password) {
     return res.status(400).json({
@@ -97,6 +98,7 @@ const registerUser = async (req, res) => {
 
     const newUser = new User({
       userName,
+      fullName: name,
       email,
       password: hashedPassword,
     });
