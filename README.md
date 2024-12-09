@@ -39,8 +39,8 @@ Follow these steps to set up the project locally:
 ### 1. 🖇️ Clone the Repository
 
 ```bash
-git clone <repository_url>
-cd <repository_folder>
+git clone https://github.com/rupesh-dev30/Todo-with-Blog.git
+cd Todo-with-Blog
 ```
 
 ### 2. 📄 Environment Variables
