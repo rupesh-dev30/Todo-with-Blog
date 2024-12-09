@@ -94,12 +94,20 @@ const taskSlice = createSlice({
       .addCase(getAllTaskById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.tasks = action.payload && action.payload.tasks;
-        console.log(action.payload.tasks);        
-        
+        // console.log(action.payload.tasks);
+
         state.tasks = action.payload;
       })
       .addCase(getAllTaskById.rejected, (state) => {
         (state.isLoading = false), (state.tasks = []);
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.isLoading = true;
+      }).addCase(deleteTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload.id);
+      }).addCase(deleteTask.rejected, (state) => {
+        state.isLoading = false
       });
   },
 });

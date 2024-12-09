@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask, getAllTaskById } from "@/slice/taskSlice";
+import { addTask, deleteTask, getAllTaskById } from "@/slice/taskSlice";
 
 const initialTaskData = {
   title: "",
@@ -65,9 +65,17 @@ export default function Todo() {
     });
   }
 
+  function handleDelete(id) {
+    dispatch(deleteTask(id)).then((data) => {
+      console.log(data);
+      // dispatch(getAllTaskById(user.id));
+    });
+  }
+
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center">
       <div className="text-4xl font-bold uppercase">Todo</div>
+      {console.log(tasks)}
       <div className="w-[500px] h-auto p-5 bg-gray-100 border border-gray-300 mt-10 rounded-md shadow-md">
         {isLoading ? (
           <p className="text-center text-gray-500">Loading...</p>
@@ -79,7 +87,10 @@ export default function Todo() {
             >
               <div className="flex justify-between items-center">
                 <h4 className="font-semibold text-lg">{item.title}</h4>
-                <Button className="bg-red-500 text-white hover:bg-red-600">
+                <Button
+                  onClick={() => handleDelete(item._id)}
+                  className="bg-red-500 text-white hover:bg-red-600"
+                >
                   Delete
                 </Button>
               </div>

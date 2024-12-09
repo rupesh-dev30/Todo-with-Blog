@@ -111,7 +111,10 @@ const deleteTask = async (req, res) => {
         .json({ success: false, message: "Task not found" });
     }
 
-    if (task.userId !== userId) {
+    console.log(task.userId, userId);
+    
+
+    if (task.userId.toString() !== userId) {
       return res.status(403).json({
         success: false,
         message: "You do not have permission to delete this task",
