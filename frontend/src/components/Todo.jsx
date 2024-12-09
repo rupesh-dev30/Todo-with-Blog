@@ -70,13 +70,13 @@ export default function Todo() {
     setIsModalOpen(true);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (id) => {
     const updatedTask = {
       ...editTaskData,
       dueDate: new Date(editTaskData.dueDate).toISOString(),
     };
 
-    dispatch(updateTask(updatedTask)).then(() => {
+    dispatch(updateTask(id, updatedTask)).then(() => {
       dispatch(getAllTaskById(user.id));
       setIsModalOpen(false);
       setEditTaskData(null);
@@ -169,7 +169,7 @@ export default function Todo() {
             />
             <Button
               className="bg-green-500 text-white hover:bg-green-600 mr-3"
-              onClick={handleUpdate}
+              onClick={() => handleUpdate(tasks.tasks._id)}
             >
               Save
             </Button>
