@@ -101,7 +101,7 @@ const deleteTask = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
 
-    const { taskId } = req.params;
+    const { id: taskId } = req.params;
 
     const task = await Task.findById(taskId);
 
@@ -143,16 +143,14 @@ const updateTask = async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
-    const taskId = req.params;
+    const { id: taskId } = req.params;
 
     const task = await Task.findById(taskId);
     if (!task) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Task not found" });
+      return res.status(404).json({ success: false, message: "Task not found" });
     }
 
-    if (task.userId !== userId) {
+    if (task.userId.toString() !== userId) {
       return res.status(403).json({
         success: false,
         message: "You do not have permission to update this task",
@@ -167,14 +165,22 @@ const updateTask = async (req, res) => {
     });
 
     return res.status(200).json({
+      success: true,
       message: "Task updated successfully!",
       task: updatedTask,
     });
   } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ message: "Failed to update task", error: error.message });
+    console.error("Error updating task:", error);
+
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ success: false, message: "Invalid token" });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update task",
+      error: error.message,
+    });
   }
 };
 

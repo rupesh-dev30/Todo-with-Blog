@@ -65,7 +65,7 @@ export const updateTask = createAsyncThunk(
   "todo/updateTask",
   async ({ id, taskData }, { rejectWithValue }) => {
     try {
-      const result = await axios.put(
+      const result = await axios.post(
         `http://localhost:3000/api/todo/update/${id}`,
         taskData,
         {
@@ -103,11 +103,26 @@ const taskSlice = createSlice({
       })
       .addCase(deleteTask.pending, (state) => {
         state.isLoading = true;
-      }).addCase(deleteTask.fulfilled, (state, action) => {
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        console.log("Delete Task Payload:", action.payload);
         state.isLoading = false;
-        state.tasks = state.tasks.filter((task) => task.id !== action.payload.id);
-      }).addCase(deleteTask.rejected, (state) => {
-        state.isLoading = false
+        if (Array.isArray(state.tasks)) {
+          state.tasks = state.tasks.filter(
+            (task) => task.id !== action.payload.id
+          );
+        }
+      })
+      .addCase(deleteTask.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const index = state.tasks.findIndex(
+          (task) => task._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
       });
   },
 });
