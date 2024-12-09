@@ -17,9 +17,7 @@ export default function Login() {
   function onSubmit(e) {
     e.preventDefault();
 
-    dispatch(loginUser(formData)).then((data) => {
-      console.log(data);
-    });
+    dispatch(loginUser(formData));
   }
 
   return (

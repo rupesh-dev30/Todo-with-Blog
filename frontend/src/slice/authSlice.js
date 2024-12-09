@@ -17,7 +17,7 @@ export const registerUser = createAsyncThunk(
       {
         withCredentials: true,
       }
-    );    
+    );
     return response.data;
   }
 );
@@ -32,6 +32,23 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
   );
   return response.data;
 });
+
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/logout",
+        { withCredentials: true }
+      );
+      console.log("Logout response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Logout error:", error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || "Logout failed");
+    }
+  }
+);
 
 export const verifyAuth = createAsyncThunk(
   "/auth/verify-auth",
@@ -103,6 +120,13 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        console.error("Logout failed:", action.payload || action.error.message);
       });
   },
 });

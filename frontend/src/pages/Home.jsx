@@ -4,7 +4,6 @@ import { Link } from "react-router";
 
 export default function Home() {
   const { user } = useSelector((state) => state.auth);
-  console.log(user);
 
   return (
     <div className="w-full min-h-screen bg-[##EEEEEE] flex flex-col justify-center items-center gap-10">
@@ -15,10 +14,12 @@ export default function Home() {
         <h1 className="text-2xl font-medium -my-4">Let do task together</h1>
       </div>
       <div className="flex gap-5 justify-start">
-        <Button className="px-10">
+        <Button className="px-[4.7rem] py-5">
           <Link to="/todo">Todo</Link>
         </Button>
-        <Button className="px-10"><Link to="/blog">Blog</Link></Button>
+        <Button className="px-[4.7rem] py-5">
+          <Link to="/blog">Blog</Link>
+        </Button>
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ const loginUser = async (req, res) => {
       {
         id: existingUser._id,
         email: existingUser.email,
-        name: existingUser.fullName
+        name: existingUser.fullName,
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
@@ -120,10 +120,15 @@ const registerUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  res.clearCookie("toke").json({
-    success: true,
-    message: "User logged out successfully",
-  });
+  const clearCookie = (req, res) => {
+    res.clearCookie("token", {
+      ...cookieOptions,
+      maxAge: undefined,
+    });
+    res
+      .status(200)
+      .json({ success: true, message: "Cookie cleared successfully" });
+  };
 };
 
 const authMiddleware = async (req, res, next) => {
@@ -139,7 +144,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
-    
+
     req.user = decoded;
     next();
   } catch (error) {

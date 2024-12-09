@@ -100,8 +100,6 @@ const deleteTask = async (req, res) => {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
-  console.log("rrrrrrr");
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
