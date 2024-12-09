@@ -23,6 +23,7 @@ export default function Todo() {
   const [newTaskData, setNewTaskData] = useState(initialTaskData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTaskData, setEditTaskData] = useState(null);
+  const [currentItemId, setCurrentItemId] = useState(null);
 
   useEffect(() => {
     if (user && user.id) {
@@ -65,18 +66,19 @@ export default function Todo() {
     });
   };
 
-  const handleOpenUpdateModal = (task) => {
+  const handleOpenUpdateModal = (task, id) => {
     setEditTaskData(task);
     setIsModalOpen(true);
+    setCurrentItemId(id);
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = () => {
     const updatedTask = {
       ...editTaskData,
       dueDate: new Date(editTaskData.dueDate).toISOString(),
     };
 
-    dispatch(updateTask(id, updatedTask)).then(() => {
+    dispatch(updateTask(currentItemId, updatedTask)).then(() => {
       dispatch(getAllTaskById(user.id));
       setIsModalOpen(false);
       setEditTaskData(null);
@@ -102,7 +104,7 @@ export default function Todo() {
                 <div className="flex gap-2">
                   <Button
                     className="bg-green-500 text-white hover:bg-green-600"
-                    onClick={() => handleOpenUpdateModal(item)}
+                    onClick={() => handleOpenUpdateModal(item, item._id)}
                   >
                     Update
                   </Button>
@@ -169,7 +171,9 @@ export default function Todo() {
             />
             <Button
               className="bg-green-500 text-white hover:bg-green-600 mr-3"
-              onClick={() => handleUpdate(tasks.tasks._id)}
+              onClick={() => {
+                handleUpdate();
+              }}
             >
               Save
             </Button>
