@@ -149,7 +149,7 @@ const deleteTask = async (req, res) => {
 //     const userId = decoded.id;
 //     const { id: taskId } = req.params;
 //     console.log(id);
-//     const {taskData} = req.body;
+//     const taskData = req.body;
 
 //     const task = await Task.findById(taskId);
 //     if (!task) {
@@ -192,7 +192,7 @@ const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { title, description } = req.body;
+    const { title, description, status, priority, dueDate, createdAt, category } = req.body;
 
     let task = await Task.findById(id);
 
@@ -205,6 +205,11 @@ const updateTask = async (req, res) => {
 
     task.title = title || task.title;
     task.description = description || task.description;
+    task.status = status || task.status;
+    task.priority = priority || task.priority;
+    task.dueDate = dueDate || task.dueDate;
+    task.createdAt = createdAt || task.createdAt;
+    task.category = category || task.category
 
     await task.save();
     res.status(200).json({

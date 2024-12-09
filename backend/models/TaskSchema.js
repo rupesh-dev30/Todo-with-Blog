@@ -34,8 +34,8 @@ const TaskSchema = new mongoose.Schema(
       default: Date.now, // Auto-generates current date if not provided
     },
     category: {
-      type: [String], // Allows multiple categories for a task
-      default: [], // Defaults to an empty array if not set
+      type: [String],
+      default: [],
       validate: {
         validator: function (value) {
           return Array.isArray(value) && value.every((item) => typeof item === 'string');

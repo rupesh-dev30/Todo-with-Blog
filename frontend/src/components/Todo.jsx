@@ -10,9 +10,11 @@ import {
 
 const initialTaskData = {
   title: "",
-  description: "description for better readability",
-  priority: "Medium",
-  dueDate: new Date(),
+  description: "",
+  priority: "",
+  dueDate: "",
+  status: "",
+  category: "",
 };
 
 export default function Todo() {
@@ -68,12 +70,11 @@ export default function Todo() {
 
   const handleOpenUpdateModal = (task, id) => {
     console.log(id);
-    
+
     setEditTaskData(task);
     setIsModalOpen(true);
     setCurrentItemId(id);
     console.log(currentItemId);
-    
   };
 
   const handleUpdate = () => {
@@ -82,12 +83,14 @@ export default function Todo() {
       dueDate: new Date(editTaskData.dueDate).toISOString(),
     };
 
-    dispatch(updateTask(currentItemId, updatedTask)).then(() => {
-      console.log(currentItemId);
-      dispatch(getAllTaskById(user.id));
-      setIsModalOpen(false);
-      setEditTaskData(null);
-    });
+    dispatch(updateTask({ id: currentItemId, taskData: updatedTask })).then(
+      () => {
+        console.log(currentItemId);
+        dispatch(getAllTaskById(user.id));
+        setIsModalOpen(false);
+        setEditTaskData(null);
+      }
+    );
   };
 
   return (
@@ -154,6 +157,7 @@ export default function Todo() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-5 rounded-md shadow-lg w-[400px]">
             <h3 className="text-xl font-bold mb-4">Update Task</h3>
+            {/* Title */}
             <input
               type="text"
               placeholder="Task title"
@@ -163,6 +167,7 @@ export default function Todo() {
                 setEditTaskData({ ...editTaskData, title: e.target.value })
               }
             />
+            {/* Description */}
             <textarea
               placeholder="Description"
               className="border p-2 w-full mb-3"
@@ -174,20 +179,72 @@ export default function Todo() {
                 })
               }
             />
-            <Button
-              className="bg-green-500 text-white hover:bg-green-600 mr-3"
-              onClick={() => {
-                handleUpdate();
-              }}
+            {/* Status */}
+            <select
+              className="border p-2 w-full mb-3"
+              value={editTaskData?.status || ""}
+              onChange={(e) =>
+                setEditTaskData({ ...editTaskData, status: e.target.value })
+              }
             >
-              Save
-            </Button>
-            <Button
-              className="bg-red-500 text-white hover:bg-red-600"
-              onClick={() => setIsModalOpen(false)}
+              <option value="">Select Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+              <option value="Archived">Archived</option>
+            </select>
+            {/* Priority */}
+            <select
+              className="border p-2 w-full mb-3"
+              value={editTaskData?.priority || ""}
+              onChange={(e) =>
+                setEditTaskData({ ...editTaskData, priority: e.target.value })
+              }
             >
-              Cancel
-            </Button>
+              <option value="">Select Priority</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+            {/* Due Date */}
+            <input
+              type="date"
+              className="border p-2 w-full mb-3"
+              value={editTaskData?.dueDate?.split("T")[0] || ""}
+              onChange={(e) =>
+                setEditTaskData({
+                  ...editTaskData,
+                  dueDate: e.target.value,
+                })
+              }
+            />
+            {/* Category */}
+            <input
+              type="text"
+              placeholder="Categories (comma separated)"
+              className="border p-2 w-full mb-3"
+              value={editTaskData?.category?.join(", ") || ""}
+              onChange={(e) =>
+                setEditTaskData({
+                  ...editTaskData,
+                  category: e.target.value.split(",").map((cat) => cat.trim()),
+                })
+              }
+            />
+            {/* Buttons */}
+            <div className="flex justify-end">
+              <button
+                className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 mr-3 rounded"
+                onClick={() => handleUpdate()}
+              >
+                Save
+              </button>
+              <button
+                className="bg-red-500 text-white hover:bg-red-600 px-4 py-2 rounded"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

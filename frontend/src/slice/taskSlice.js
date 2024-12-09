@@ -62,19 +62,24 @@ export const deleteTask = createAsyncThunk(
 );
 
 export const updateTask = createAsyncThunk(
-  "todo/updatetask",
-  async ({id, taskData}) => {
-    const result = await axios.put(
-      `http://localhost:3000/api/todo/update/${id}`,
-      taskData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-    return result?.data;
+  "todo/updateTask",
+
+  async ({ id, taskData }, { rejectWithValue }) => {
+    try {
+      const result = await axios.put(
+        `http://localhost:3000/api/todo/update/${id}`,
+        taskData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      return result?.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error updating task");
+    }
   }
 );
 
@@ -116,9 +121,14 @@ const taskSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
+        if (!Array.isArray(state.tasks)) {
+          return;
+        }
+
         const index = state.tasks.findIndex(
           (task) => task._id === action.payload._id
         );
+
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }
