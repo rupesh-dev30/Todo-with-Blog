@@ -23,7 +23,7 @@ export default function Todo() {
   const [newTaskData, setNewTaskData] = useState(initialTaskData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTaskData, setEditTaskData] = useState(null);
-  const [currentItemId, setCurrentItemId] = useState(null);
+  const [currentItemId, setCurrentItemId] = useState("");
 
   useEffect(() => {
     if (user && user.id) {
@@ -67,9 +67,13 @@ export default function Todo() {
   };
 
   const handleOpenUpdateModal = (task, id) => {
+    console.log(id);
+    
     setEditTaskData(task);
     setIsModalOpen(true);
     setCurrentItemId(id);
+    console.log(currentItemId);
+    
   };
 
   const handleUpdate = () => {
@@ -79,6 +83,8 @@ export default function Todo() {
     };
 
     dispatch(updateTask(currentItemId, updatedTask)).then(() => {
+      console.log(currentItemId);
+      
       dispatch(getAllTaskById(user.id));
       setIsModalOpen(false);
       setEditTaskData(null);
