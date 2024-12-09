@@ -62,23 +62,19 @@ export const deleteTask = createAsyncThunk(
 );
 
 export const updateTask = createAsyncThunk(
-  "todo/updateTask",
-  async ({ id, taskData }, { rejectWithValue }) => {
-    try {
-      const result = await axios.post(
-        `http://localhost:3000/api/todo/update/${id}`,
-        taskData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      return result?.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Error updating task");
-    }
+  "todo/updatetask",
+  async ({id, taskData}) => {
+    const result = await axios.put(
+      `http://localhost:3000/api/todo/update/${id}`,
+      taskData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    return result?.data;
   }
 );
 
@@ -114,6 +110,9 @@ const taskSlice = createSlice({
         }
       })
       .addCase(deleteTask.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateTask.pending, (state) => {
         state.isLoading = false;
       })
       .addCase(updateTask.fulfilled, (state, action) => {

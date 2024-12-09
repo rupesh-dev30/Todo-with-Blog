@@ -84,7 +84,6 @@ export default function Todo() {
 
     dispatch(updateTask(currentItemId, updatedTask)).then(() => {
       console.log(currentItemId);
-      
       dispatch(getAllTaskById(user.id));
       setIsModalOpen(false);
       setEditTaskData(null);

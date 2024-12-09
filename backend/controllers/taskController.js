@@ -14,25 +14,28 @@ const getAllTaskById = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userIdFromToken = decoded.id;
 
-
     const { id } = req.params;
 
     if (!id) {
-      return res.status(400).json({ success: false, message: "User ID is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
     }
 
     if (id !== userIdFromToken) {
       return res.status(403).json({ success: false, message: "Forbidden" });
     }
 
-    const userIdObjectId = new mongoose.Types.ObjectId(id)
+    const userIdObjectId = new mongoose.Types.ObjectId(id);
 
-    const tasks = await Task.find({ userId: userIdObjectId});
+    const tasks = await Task.find({ userId: userIdObjectId });
 
     return res.status(200).json({ success: true, tasks });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -97,6 +100,8 @@ const deleteTask = async (req, res) => {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
+  console.log("rrrrrrr");
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
@@ -112,7 +117,6 @@ const deleteTask = async (req, res) => {
     }
 
     console.log(task.userId, userId);
-    
 
     if (task.userId.toString() !== userId) {
       return res.status(403).json({
@@ -134,52 +138,84 @@ const deleteTask = async (req, res) => {
   }
 };
 
+// const updateTask = async (req, res) => {
+//   const token = req.cookies.token;
+//   if (!token) {
+//     return res.status(401).json({ success: false, message: "Unauthorized" });
+//   }
+
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     const userId = decoded.id;
+//     const { id: taskId } = req.params;
+//     console.log(id);
+//     const {taskData} = req.body;
+
+//     const task = await Task.findById(taskId);
+//     if (!task) {
+//       return res.status(404).json({ success: false, message: "Task not found" });
+//     }
+
+//     if (task.userId.toString() !== userId.toString()) {
+//       return res.status(403).json({
+//         success: false,
+//         message: "You do not have permission to update this task",
+//       });
+//     }
+
+//     const updatedTask = await Task.findByIdAndUpdate(taskId, taskData, {
+//       new: true,
+//       runValidators: true,
+//     });
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Task updated successfully!",
+//       task: updatedTask,
+//     });
+//   } catch (error) {
+//     console.error("Error updating task:", error);
+
+//     if (error.name === 'JsonWebTokenError') {
+//       return res.status(401).json({ success: false, message: "Invalid token" });
+//     }
+
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to update task",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const updateTask = async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
-    const { id: taskId } = req.params;
+    const { id } = req.params;
 
-    const task = await Task.findById(taskId);
+    const { title, description } = req.body;
+
+    let task = await Task.findById(id);
+
     if (!task) {
-      return res.status(404).json({ success: false, message: "Task not found" });
-    }
-
-    if (task.userId.toString() !== userId) {
-      return res.status(403).json({
+      return res.status(404).json({
         success: false,
-        message: "You do not have permission to update this task",
+        message: "Task not found.",
       });
     }
 
-    const updates = req.body;
+    task.title = title || task.title;
+    task.description = description || task.description;
 
-    const updatedTask = await Task.findByIdAndUpdate(taskId, updates, {
-      new: true,
-      runValidators: true,
-    });
-
-    return res.status(200).json({
+    await task.save();
+    res.status(200).json({
       success: true,
-      message: "Task updated successfully!",
-      task: updatedTask,
+      data: task,
     });
   } catch (error) {
-    console.error("Error updating task:", error);
-
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ success: false, message: "Invalid token" });
-    }
-
-    return res.status(500).json({
+    console.log(error);
+    res.status(500).json({
       success: false,
-      message: "Failed to update task",
-      error: error.message,
+      message: "Error editting task.",
     });
   }
 };
