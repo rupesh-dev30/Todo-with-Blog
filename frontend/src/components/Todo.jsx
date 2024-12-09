@@ -11,8 +11,8 @@ import {
 const initialTaskData = {
   title: "",
   description: "",
-  priority: "",
-  dueDate: "",
+  priority: "Medium",
+  dueDate: new Date(),
   status: "",
   category: "",
 };
